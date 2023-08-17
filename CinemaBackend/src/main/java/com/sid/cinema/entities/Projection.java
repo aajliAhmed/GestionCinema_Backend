@@ -26,6 +26,18 @@ public class Projection {
 	private Film film;
 	@OneToMany(mappedBy = "projection")
 	private Collection<Ticket> tickets;
+	public Collection<Ticket> getTickets() {
+		return tickets;
+	}
+	public void setTickets(Collection<Ticket> tickets) {
+		this.tickets = tickets;
+	}
+	public Seance getSeance() {
+		return seance;
+	}
+	public void setSeance(Seance seance) {
+		this.seance = seance;
+	}
 	@ManyToOne
 	private Seance seance;
 	public Projection() {

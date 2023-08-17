@@ -23,6 +23,18 @@ public class Salle {
 	private int nombrePlace;
 	@ManyToOne
 	private Cinema cinema;
+	public Collection<Place> getPlaces() {
+		return places;
+	}
+	public void setPlaces(Collection<Place> places) {
+		this.places = places;
+	}
+	public Collection<Projection> getProjections() {
+		return projections;
+	}
+	public void setProjections(Collection<Projection> projections) {
+		this.projections = projections;
+	}
 	@OneToMany(mappedBy = "salle")
 	private Collection<Place> places;
 	@OneToMany(mappedBy = "salle")

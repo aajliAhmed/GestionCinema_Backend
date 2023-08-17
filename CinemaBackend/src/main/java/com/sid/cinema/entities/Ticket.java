@@ -1,5 +1,6 @@
 package com.sid.cinema.entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,7 +17,8 @@ public class Ticket {
 	private Long id;
 	private String nomClient;
 	private double prix;
-	private int codePayement;
+	@Column(unique = true,nullable = true)
+	private Integer codePayement;
 	private boolean reserve;
 	@ManyToOne
 	private Place place;

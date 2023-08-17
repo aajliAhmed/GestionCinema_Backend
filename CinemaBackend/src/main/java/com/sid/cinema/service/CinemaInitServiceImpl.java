@@ -1,9 +1,16 @@
 package com.sid.cinema.service;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.sid.cinema.dao.CategorieRepository;
 import com.sid.cinema.dao.CinemaRepository;
@@ -12,13 +19,22 @@ import com.sid.cinema.dao.PlaceRepository;
 import com.sid.cinema.dao.ProjectionRepository;
 import com.sid.cinema.dao.SalleRepository;
 import com.sid.cinema.dao.SeanceRepository;
+import com.sid.cinema.dao.TicketRepository;
 import com.sid.cinema.dao.VilleRepository;
+import com.sid.cinema.entities.Categorie;
 import com.sid.cinema.entities.Cinema;
+import com.sid.cinema.entities.Film;
 import com.sid.cinema.entities.Place;
+import com.sid.cinema.entities.Projection;
 import com.sid.cinema.entities.Salle;
+import com.sid.cinema.entities.Seance;
+import com.sid.cinema.entities.Ticket;
 import com.sid.cinema.entities.Ville;
 
+import jakarta.transaction.Transactional;
+
 @Service
+@Transactional
 public class CinemaInitServiceImpl implements IcinemaInitService {
 	@Autowired
 	private VilleRepository villeRepository;
@@ -36,6 +52,8 @@ public class CinemaInitServiceImpl implements IcinemaInitService {
 	private ProjectionRepository projectionRepository;
 	@Autowired
 	private CategorieRepository categorieRepository;
+	@Autowired
+	private TicketRepository ticketRepository;
 	
 	@Override
 	public void initVilles() {
@@ -56,6 +74,7 @@ public class CinemaInitServiceImpl implements IcinemaInitService {
 				cinema.setName(nameCinema);
 				cinema.setNombreSalles(3+(int)(Math.random()*7));
 				cinema.setVille(v);
+				cinemaRepository.save(cinema);
 			});
 		});
 		
@@ -75,11 +94,6 @@ public class CinemaInitServiceImpl implements IcinemaInitService {
 		
 	}
 
-	@Override
-	public void initSeances() {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public void initPlaces() {
@@ -95,26 +109,82 @@ public class CinemaInitServiceImpl implements IcinemaInitService {
 	}
 
 	@Override
+	public void initSeances() {
+		DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+		Stream.of("12:00","15:00","17:00","19:00","21:00").forEach(s->{
+			Seance seance = new Seance();
+			try {
+				seance.setHeureDebut(dateFormat.parse(s));
+				seanceRepository.save(seance);
+			}catch (ParseException e) {
+				e.printStackTrace();
+			}
+			
+		});
+		
+	}
+
+	@Override
 	public void initCategories() {
-		// TODO Auto-generated method stub
+		Stream.of("Histoire","Action","Fiction","Drama").forEach(cat->{
+			Categorie categorie = new Categorie();
+			categorie.setName(cat);
+			categorieRepository.save(categorie);
+		});
 		
 	}
 
 	@Override
 	public void initFilms() {
-		// TODO Auto-generated method stub
+		double[] durees = new double[] {1,1.5,2,2.5,3};
+		List<Categorie> categories = categorieRepository.findAll();
+		Stream.of("Avatar","Game of thrones","SpiderMan","cat Women","Iron man")
+		.forEach(titre->{
+			Film film = new Film();
+			film.setTitre(titre);
+			film.setDuree(durees[new Random().nextInt(durees.length)]);
+			film.setPhoto(titre.replaceAll(" ",""));
+			film.setCategorie(categories.get(new Random().nextInt(categories.size())));
+			filmRepository.save(film);
+		});
 		
 	}
 
 	@Override
 	public void initProjections() {
-		// TODO Auto-generated method stub
+		double[] prices = new double[] {30,50,60,70,90,100};
+		villeRepository.findAll().forEach(ville->{
+			ville.getCinemas().forEach(cinema->{
+				cinema.getSalles().forEach(salle->{
+					filmRepository.findAll().forEach(film->{
+						seanceRepository.findAll().forEach(seance->{
+							Projection projection = new Projection();
+							projection.setDateProjection(new Date());
+							projection.setFilm(film);
+							projection.setPrix(prices[new Random().nextInt(prices.length)]);
+							projection.setSalle(salle);
+							projection.setSeance(seance);
+							projectionRepository.save(projection);
+						});
+					});
+				});
+			});
+		});
 		
 	}
 
 	@Override
 	public void initTickets() {
-		// TODO Auto-generated method stub
+		projectionRepository.findAll().forEach(p->{
+			p.getSalle().getPlaces().forEach(place->{
+				Ticket ticket = new Ticket();
+				ticket.setPlace(place);
+				ticket.setPrix(p.getPrix());
+				ticket.setProjection(p);
+				ticket.setReserve(false);
+				ticketRepository.save(ticket);
+			});
+		});
 		
 	}
 	
