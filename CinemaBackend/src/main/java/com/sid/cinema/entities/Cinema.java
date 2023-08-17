@@ -25,6 +25,18 @@ public class Cinema implements Serializable {
 	private Collection<Salle> salles;
 	@ManyToOne
 	private Ville ville;
+	public Collection<Salle> getSalles() {
+		return salles;
+	}
+	public void setSalles(Collection<Salle> salles) {
+		this.salles = salles;
+	}
+	public Ville getVille() {
+		return ville;
+	}
+	public void setVille(Ville ville) {
+		this.ville = ville;
+	}
 	public Cinema() {
 		super();
 		// TODO Auto-generated constructor stub
