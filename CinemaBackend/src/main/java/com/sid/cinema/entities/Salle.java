@@ -4,6 +4,9 @@ import java.util.Collection;
 
 import org.hibernate.annotations.ManyToAny;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,7 +25,15 @@ public class Salle {
 	private String nom;
 	private int nombrePlace;
 	@ManyToOne
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private Cinema cinema;
+	@OneToMany(mappedBy = "salle")
+	@JsonProperty(access = Access.WRITE_ONLY)
+	private Collection<Place> places;
+	@OneToMany(mappedBy = "salle")
+	@JsonProperty(access = Access.WRITE_ONLY)
+	private Collection<Projection> projections;
+	
 	public Collection<Place> getPlaces() {
 		return places;
 	}
@@ -35,10 +46,7 @@ public class Salle {
 	public void setProjections(Collection<Projection> projections) {
 		this.projections = projections;
 	}
-	@OneToMany(mappedBy = "salle")
-	private Collection<Place> places;
-	@OneToMany(mappedBy = "salle")
-	private Collection<Projection> projections;
+	
 	
 	public Salle() {
 		super();

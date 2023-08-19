@@ -1,5 +1,8 @@
 package com.sid.cinema.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,11 +20,15 @@ public class Ticket {
 	private Long id;
 	private String nomClient;
 	private double prix;
-	@Column(unique = true,nullable = true)
+	@Column(unique = false,nullable = true)
 	private Integer codePayement;
 	private boolean reserve;
 	@ManyToOne
 	private Place place;
+	@ManyToOne
+	@JsonProperty(access = Access.WRITE_ONLY)
+	private Projection projection;
+	
 	public Ticket() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -68,6 +75,5 @@ public class Ticket {
 	public void setProjection(Projection projection) {
 		this.projection = projection;
 	}
-	@ManyToOne
-	private Projection projection;
+	
 }

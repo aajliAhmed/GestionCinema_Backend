@@ -2,6 +2,9 @@ package com.sid.cinema.entities;
 
 import java.util.Collection;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,6 +25,7 @@ public class Place {
 	@ManyToOne
 	private Salle salle;
 	@OneToMany(mappedBy = "place")
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private Collection<Ticket> tickets;
 	public Place() {
 		super();
