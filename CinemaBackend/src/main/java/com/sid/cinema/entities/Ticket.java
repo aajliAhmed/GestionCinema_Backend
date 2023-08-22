@@ -20,8 +20,7 @@ public class Ticket {
 	private Long id;
 	private String nomClient;
 	private double prix;
-	@Column(unique = false,nullable = true)
-	private Integer codePayement;
+	private int codePayement;
 	private boolean reserve;
 	@ManyToOne
 	private Place place;
