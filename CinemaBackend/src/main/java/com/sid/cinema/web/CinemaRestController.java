@@ -65,10 +65,17 @@ public class CinemaRestController {
 @Data
 class TicketForm{
 	private String nomClient;
-	private List<Long> tickets = new ArrayList<Long>();
+	private int codePayement;
+	private List<Long> tickets = new ArrayList<>();
 	
 	
 	
+	public int getCodePayement() {
+		return codePayement;
+	}
+	public void setCodePayement(int codePayement) {
+		this.codePayement = codePayement;
+	}
 	public String getNomClient() {
 		return nomClient;
 	}

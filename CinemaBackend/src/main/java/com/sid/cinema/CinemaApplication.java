@@ -8,6 +8,8 @@ import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 
 import com.sid.cinema.dao.CinemaRepository;
 import com.sid.cinema.entities.Film;
+import com.sid.cinema.entities.Salle;
+import com.sid.cinema.entities.Ticket;
 import com.sid.cinema.service.IcinemaInitService;
 
 @SpringBootApplication 
@@ -23,7 +25,7 @@ public class CinemaApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		restConfiguration.exposeIdsFor(Film.class);
+		restConfiguration.exposeIdsFor(Film.class,Salle.class,Ticket.class);
 		icinemaInitService.initVilles();
 		icinemaInitService.initCinimas();
 		icinemaInitService.initSalles();
